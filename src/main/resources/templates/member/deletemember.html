@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>로그아웃</title>
+<link rel="stylesheet" href="/css/board.css">
+<style>
+.deleteView{
+  width:70%;
+  height:auto;
+  margin: auto;
+  padding: 35px;
+  background-color:#FFFFFF;
+  text-align:left;
+  border:5px solid gray;
+  border-radius: 30px;
+}  
+
+.deleteForm {
+	
+	height:auto;
+  margin: auto;
+	 text-align: center;
+}
+
+.btn_delete {
+            display: block;
+            margin: 0 auto; /* 가로 중앙 정렬 추가 */
+        }
+
+</style>
+
+
+
+
+<script>
+	
+	const pwCheck = async() => {
+		
+		
+      const password = document.querySelector('#password');
+     if(userid.value =="") { alert("아이디를 입력하세요."); userid.focus(); return false; }
+	if(password.value == "") { alert("비밀번호를 입력하세요."); password.focus();  return false; }
+	
+         let formData = new FormData();
+         formData.append("userid", userid.value);
+		formData.append("password", password.value);
+	   
+	   
+	   
+await fetch('/member/deletemember',{
+			method: "POST",
+			body: formData
+		}).then((response) => response.json())
+			.then((data) => {
+				if(data.message === 'GOOD'){
+				alert("탈퇴되었습니다.");
+				document.location.href='/member/login';
+				}
+					else {
+					alert("시스템 장애로 회원탈퇴가 실패 했습니다.");
+				}
+			}).catch((error)=> {
+				console.log("error = " + error);
+			})
+
+
+
+
+}
+	
+	
+	const press = () => {
+	if(event.keyCode == 13){ pwCheck(); }
+}
+	
+	
+	
+	
+</script>
+
+
+
+
+
+
+
+
+</head>
+<body>
+
+<br><br>
+<div id="main">
+	<div class="deleteView">
+		<h1>회원탈퇴를 눌렀습니다. [[${session.userid}]]([[${session.username}]])님 정말 탈퇴하시겠습니까?</h1>
+		</div>
+</div>
+		<form name="deleteForm" class="deleteForm" id="deleteForm" method="post">
+            
+            <input type="userid" name="userid" id="userid" class="input_field" placeholder="아이디를 입력하세요.">
+            <input type="password" name="password" id="password" class="input_field" placeholder="비밀번호를 입력하세요." onkeydown="press()">
+            <input type="button" id="btn_delete" class="btn_delete"  value="비밀번호 입력 후 여기를 눌러주세요."onclick="pwCheck()">
+        </form>
+	
+</body>
+</html>

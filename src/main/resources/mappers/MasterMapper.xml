@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.board.mapper.MasterMapper">
+
+
+
+
+<!--회원 수 세기 -->
+<select id="CntMember"  resultType="int">
+select count(*) from tbl_member
+</select>
+
+
+<!-- 여자 수 세기 --> 
+<select id="CntW" resultType="int">
+	select count(*) from tbl_member where gender = '여성'
+	</select>
+
+<!-- 남자 수 세기 --> 
+<select id="CntM" resultType="int">
+	select count(*) from tbl_member where gender = '남성'
+	</select>
+
+
+
+
+
+
+
+<!--댓글 개수 세기 --> 
+<select id="CntReply"  resultType="int">
+select count(*) from tbl_reply
+</select>
+
+
+
+<!--게시물 전체 개수 세기 --> 
+<select id="CntPost"  resultType="int">
+select count(*) from tbl_board
+</select>
+
+
+
+<!--파일 삭제 개수 세기--> 
+<select id="DeleteFilecnt" resultType="int">
+	select count(*) from tbl_file where checkfile = 'N'
+	</select>
+
+
+<!-- 삭제된 파일 명 출력 --> 
+<select id="SeeDeleteFile" resultType="HashMap">
+	select org_filename from tbl_file where checkfile = 'N'
+	</select>
+
+<!-- N파일 뽑기 -->
+   <select id="findNFile" resultType="com.board.dto.FileDTO">
+   		select * from tbl_file where checkfile = 'N'
+   </select>
+   
+
+
+
+
+<!--  완전 삭제를 위해 fileseqno 가져오기 --> 
+<select id="GetFileseqno"  resultType="HashMap">
+	select fileseqno from tbl_file where checkfile = 'N'
+	</select>
+
+
+
+<!-- 개별파일 완전삭제 
+<delete id="DeleteFile">
+	    delete from tbl_file where checkfile = 'N' and fileseqno = #{fileseqno}
+	</delete>
+--> 
+
+<!-- 모든 파일 완전삭제 -->
+<delete id="DeleteAll">
+	delete from tbl_file where checkfile = 'N'
+	</delete>
+
+
+
+<!--마스터 권한 게시판 삭제 -->
+<delete id="deletePost" parameterType="int">
+	delete from tbl_board where seqno = #{seqno}
+</delete>
+
+
+
+</mapper>

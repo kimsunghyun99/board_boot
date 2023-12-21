@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>관리자 페이지</title>
+<link rel="stylesheet" href="/css/board.css">
+<style>
+	
+
+.menubar {
+   width: 100%;
+   height: auto;
+   background-color: #168;
+   position: fixed;
+   top: 0;
+   left: 0;
+   right: 0;
+   text-align: center;
+   line-height: 60px;
+}
+
+.menubar a:link, a:visited, a:active {
+   color: black;
+   font-weight: bold;
+}
+
+.menubar a {
+   display: block;
+   text-decoration: none;
+}
+
+.menubar .main_menu > li {
+   float: left;
+   width: 20%;
+   height: 100%;
+   line-height: 50px;
+   list-style: none;
+   font-weight: bold;
+   position: relative;
+   margin: 0px;
+}
+
+.menubar .main_menu > li > a:hover {
+   background-color: #f0f6f9;
+   color: #168;
+   font-weight: bold;
+}
+
+.menubar .main_menu .sub_menu {
+   list-style: none;
+   display: none;
+   position: absolute;
+   padding-left: 0;
+   padding-right: 0;
+   background-color: #c7d1db;
+   width: 100%;
+   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+}
+
+.main_menu li:hover .sub_menu {
+   display: block;
+}
+
+.main {
+	padding-top: 100px;
+}
+
+
+.InfoTable a {
+        color: black;
+    }
+ 
+    .aaa a:link, a:visited, a:active  {
+	color: black;
+	}
+
+     .InfoTable a:hover {
+        color: blue;
+    }
+
+
+</style>
+
+<script>
+	
+	
+	const deleteItem = async() => {
+		const deleteseqnoValue = document.getElementById('deleteseqno').value;
+		
+		
+		console.log(deleteseqnoValue);
+	//	 let formData = new FormData();
+     //    formData.append("deleteseqnoValue", deleteseqnoValue);
+		
+		
+  await fetch('/master/boardManage', {
+            method: 'POST',
+             headers: {
+            'Content-Type': 'application/json',
+        },
+            body: JSON.stringify({ seqno: deleteseqnoValue }),
+        })
+        .then((response) => response.json())
+			.then((data) => {
+				if(data.message === 'GOOD'){
+				alert("삭제되었습니다.");
+				}
+					else {
+					alert("삭제 실패 했습니다.");
+				}
+			}).catch((error)=> {
+				console.log("error = " + error);
+			})
+	
+}
+	
+</script>
+
+
+</head>
+
+
+
+<body>
+ 
+<div class="menubar">
+	<ul class="main_menu">
+		<li><a href="/board/list?page=1">홈으로</a></li>
+		<li><a href="#">사용자 통계</a>
+		<ul class="sub_menu">
+			<li><a href="/master/cntMember">전체 회원 숫자</a></li>
+			<li><a href="/master/cntPost">게시물 갯수</a></li>
+			<li><a href="/master/cntReply">댓글 갯수</a></li>
+		</ul>
+		</li>	
+		<li><a href="/master/deleteFile">첨부파일 관리</a></li>	      
+		<li><a href="/master/boardManage">게시판 관리</a></li>  
+		<li><a href="/master/sysinfo">시스템 정보</a></li>     
+	</ul>
+</div>
+
+            <div class="main">
+	<div class="ModifyForm">
+		<h1>글 관리 </h1>					
+	</div>
+	<br><br>
+	 <table class="InfoTable">
+            <tr>
+                <th>번호</th>
+                <th>제목</th>
+                <th>작성자</th>
+                <th>작성일</th>
+                <th>조회수</th>
+                <th>삭제</th>
+            </tr>
+            <th:block th:if="${list != null}">
+		
+	            <tr th:each="list:${list}" 
+	            	onMouseover="this.style.background='#46D2D2'" 
+	            	onMouseout="this.style.background='white'">
+	                <td th:text="${list.seqno}"></td> 
+	            
+	                <td style="text-align: left;">
+	                	<a th:href="@{'/master/boardManage?seqno=' + ${list.seqno} + '&page=' + 
+	                			${page} + '&keyword=' + ${keyword}}" 
+	                   		onMouseover="this.style.textDecoration='underline'" 
+	                   		onMouseout="this.style.textDecoration='none'">
+	                   		<span th:text="${list.title}"></span>
+	                   	</a>
+	                </td>
+	                <td th:text="${list.writer}"></td>
+	                <td th:text="${list.regdate}"></td>	                	
+	                <td th:text="${list.hitno}"></td>
+	                 <td>
+                <input type="button" value="삭제" onclick="deleteItem()">
+                <input type="hidden" id="deleteseqno" name="deleteseqno" th:value="${list.seqno}">
+            </td>
+	                	            </tr>
+			</th:block>
+			<th:block th:if="${list == null}">
+				<td colspan="5">등록된 게시물이 없습니다.</td>
+			</th:block>
+        </table>  
+        <br>
+       
+		  <div>[(${pageList})]</div>
+		  <br>
+	 </div>
+	
+</div>
+
+<br><br>
+
+
+
+
+
+</body>
+</html>
