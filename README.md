@@ -7,5 +7,5 @@
 언어: Java, Javascript, html, css
 운영체제: Windows10
 도메인 : 3-Tier: 웹서버 : Apache HTTP Server: WAS : Apache Tomcat 10(Spring Boot 내장)
-인증 : Form 로그인 , Security
-환경: Maria DB, Spring Framework, STS
+인증 : Form 로그인 ,OAuth2  
+환경: Maria DB, Spring Boot,Security STS
